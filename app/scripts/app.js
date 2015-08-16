@@ -29,9 +29,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ngCordova', 'ngGPlac
                     longitude: $rootScope.long
                 }).then(
                     function(data) {
-                      console.log(data)
                         $rootScope.nearbyRes = data;
-                          nycHealth.nycData(data);
+                      nycHealth.nycData(data)
                     });
             }, function(err) {
                 alert('Seems liek your location settings are turned off. Please check your location setting!')

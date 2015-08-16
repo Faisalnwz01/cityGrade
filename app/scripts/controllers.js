@@ -43,7 +43,7 @@ angular.module('starter.controllers', [])
 
 .controller('PlaylistsCtrl', function($scope, $rootScope, $http, ngGPlacesAPI, nycHealth) {
 
-      
+
 
         $scope.playlists = [{
             title: 'Reggae',
@@ -71,44 +71,69 @@ angular.module('starter.controllers', [])
             var resName;
             var number = [];
             var resStreetNum;
-            var cityOpenDataUrl = 'https://data.cityofnewyork.us/resource/9w7m-hzhe.json?phone='
+            var boro
+            var cityOpenDataUrl = 'https://data.cityofnewyork.us/resource/9w7m-hzhe.json?dba='
             var borugh = '&boro='
-            data.forEach(function(value, key) {
-                var getPhoneNumers = ngGPlacesAPI.placeDetails({
-                    reference: value.reference
-                }).then(
-                    function(el) {
-                        return el
-                    });
-                getPhoneNumers.then(function(el) {
-                    var phoneNumber = el.formatted_phone_number
-                    phoneNumber = phoneNumber.replace(/\s/g, '');
-                    phoneNumber = phoneNumber.replace(/\)/g, '');
-                    phoneNumber = phoneNumber.replace(/\(/g, '');
-                    phoneNumber = phoneNumber.replace(/\-/g, '');
-                    // console.log(el)
-                    var getUrl = cityOpenDataUrl + phoneNumber;
-
+            data.forEach(function(data) {
+                    resName = data.name.toUpperCase();
+                    var str = data.vicinity.split(' ')
+                    resStreetNum = Number(str[0]);
+                    var number = str.length - 1
+                    boro = str[number].toUpperCase()
+                    console.log(boro, resStreetNum, resName)
+                    var getUrl = cityOpenDataUrl + resName + borugh + boro;
                     $http.get(getUrl)
                         .then(function(dat) {
-                            processedArray.push(dat)
-                            console.log(processedArray)
-                            return
+                            return processedArray.push(dat)
+
                         })
+
                 })
+                // var cityOpenDataUrl = 'https://data.cityofnewyork.us/resource/9w7m-hzhe.json?phone='
+                // var borugh = '&boro='
+                // data.forEach(function(value, key) {
+                //     var getPhoneNumers = ngGPlacesAPI.placeDetails({
+                //         reference: value.reference
+                //     }).then(
+                //         function(el) {
+                //             return el
+                //         });
+                //     getPhoneNumers.then(function(el) {
+                //         var phoneNumber = el.formatted_phone_number
+                //         phoneNumber = phoneNumber.replace(/\s/g, '');
+                //         phoneNumber = phoneNumber.replace(/\)/g, '');
+                //         phoneNumber = phoneNumber.replace(/\(/g, '');
+                //         phoneNumber = phoneNumber.replace(/\-/g, '');
+                //         // console.log(el)
+                //         var getUrl = cityOpenDataUrl + phoneNumber;
 
-            })
+            //         $http.get(getUrl)
+            //             .then(function(dat) {
+            //                 processedArray.push(dat)
+            //                 console.log(processedArray)
+            //                 return
+            //             })
+            //     })
 
-            return
+            // })
+            console.log(timedoutData())
+            return timedoutData()
+
+
 
 
         }
-  
+        var timedoutData = function() {
+            setTimeout(function() {
+                return processedArray
+            }, 100);
+            return processedArray
+
+        }
 
         return {
             nycData: function(data) {
-                healthData(data)
-                return processedArray
+                return healthData(data);
             }
 
         };
